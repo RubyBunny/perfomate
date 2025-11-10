@@ -55,23 +55,14 @@ func row2markedQuestions(questionRow, answerRow []string) []qapair.MarkedQAPair 
 }
 
 func row2unmarkedQuestions(questionRow, answerRow []string) []qapair.QAPair {
-	var unmarkedQuestions []qapair.QAPair
-	answerCount := len(answerRow)
+	unmarkedQuestions := make([]qapair.QAPair, len(questionRow))
 
-	for i := range answerCount {
-		unmarkedQuestions = append(unmarkedQuestions, qapair.QAPair{
-			Question: questionRow[i],
-			Answer:   answerRow[i],
-		})
+	for i, question := range questionRow {
+		unmarkedQuestions[i].Question = question
 	}
 
-	if len(questionRow[answerCount:]) > 0 {
-		for i := range questionRow[answerCount:] {
-			unmarkedQuestions = append(unmarkedQuestions, qapair.QAPair{
-				Question: questionRow[i+answerCount],
-				Answer:   "",
-			})
-		}
+	for i, answer := range answerRow {
+		unmarkedQuestions[i].Answer = answer
 	}
 
 	return unmarkedQuestions
