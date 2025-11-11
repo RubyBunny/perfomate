@@ -22,14 +22,20 @@ type FinalReview struct {
 func NewFinalReview(fullname string, reviews []Review) FinalReview {
 	respondents := concatRespondents(reviews)
 	questions := joinQuestions(reviews)
-	avgMark := calcAverageMark(questions)
-	status := avgMark2Result(avgMark)
+
+	var marks []float64
+	for _, mq := range questions.MarkedQuestions {
+		marks = append(marks, mq.Mark)
+	}
+
+	avg := calcAverageMark(marks)
+	status := avgMark2Result(avg)
 
 	return FinalReview{
 		Fullname:    fullname,
 		Respondents: respondents,
 		Questions:   questions,
-		AvgMark:     avgMark,
+		AvgMark:     avg,
 		Status:      status,
 	}
 }
@@ -49,9 +55,7 @@ func joinQuestions(reviews []Review) qapair.QAPairRepository {
 
 	for qi := range reviews[0].Questions.MarkedQuestions {
 		var answers []string
-		var marksSum float64
-		var avgMark float64
-		var zerosCount int
+		marks := make([]float64, len(reviews))
 
 		for ri := range reviews {
 			if reviews[ri].Questions.MarkedQuestions[qi].Answer != "" {
@@ -61,17 +65,7 @@ func joinQuestions(reviews []Review) qapair.QAPairRepository {
 				)
 			}
 
-			if reviews[ri].Questions.MarkedQuestions[qi].Mark == 0 {
-				zerosCount++
-			}
-
-			marksSum += reviews[ri].Questions.MarkedQuestions[qi].Mark
-		}
-
-		if len(reviews) == zerosCount {
-			avgMark = 0
-		} else {
-			avgMark = marksSum / float64(len(reviews)-zerosCount)
+			marks[ri] = reviews[ri].Questions.MarkedQuestions[qi].Mark
 		}
 
 		markedQuestions = append(markedQuestions, qapair.MarkedQAPair{
@@ -79,7 +73,7 @@ func joinQuestions(reviews []Review) qapair.QAPairRepository {
 				Question: reviews[0].Questions.MarkedQuestions[qi].Question,
 				Answer:   strings.Join(answers, "\n"),
 			},
-			Mark: avgMark,
+			Mark: calcAverageMark(marks),
 		})
 	}
 
@@ -107,26 +101,23 @@ func joinQuestions(reviews []Review) qapair.QAPairRepository {
 	}
 }
 
-func calcAverageMark(questions qapair.QAPairRepository) float64 {
-	var avgMark float64
-	var marksSum float64
-	var zerosCount int
+func calcAverageMark(marks []float64) float64 {
+	var sum float64
+	var zeroes int
 
-	for _, q := range questions.MarkedQuestions {
-		if q.Mark == 0 {
-			zerosCount++
+	for _, mark := range marks {
+		if mark == 0 {
+			zeroes++
 		}
 
-		marksSum += q.Mark
+		sum += mark
 	}
 
-	if len(questions.MarkedQuestions) == zerosCount {
-		avgMark = 0
-	} else {
-		avgMark = marksSum / float64(len(questions.MarkedQuestions)-zerosCount)
+	if len(marks) == zeroes {
+		return 0
 	}
 
-	return avgMark
+	return sum / float64(len(marks)-zeroes)
 }
 
 func avgMark2Result(avg float64) string {
