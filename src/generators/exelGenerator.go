@@ -22,26 +22,65 @@ func (e ExelGenerator) Generate(finalReview reviews.FinalReview) {
 	f := excelize.NewFile()
 	defer f.Close()
 
-	allCenterStyle, _ := f.NewStyle(&excelize.Style{
-		Alignment: &excelize.Alignment{
-			Vertical:   "center",
-			Horizontal: "center",
-			WrapText:   true,
-		},
+	boldText := excelize.Font{Bold: true}
+	allCenterAligment := excelize.Alignment{
+		Vertical:   "center",
+		Horizontal: "center",
+		WrapText:   true,
+	}
+	verticalCenterAligment := excelize.Alignment{
+		Vertical: "center",
+		WrapText: true,
+	}
+	borders := []excelize.Border{
+		{Type: "top", Color: "#000000", Style: 1},
+		{Type: "left", Color: "#000000", Style: 1},
+		{Type: "right", Color: "#000000", Style: 1},
+		{Type: "bottom", Color: "#000000", Style: 1},
+	}
+
+	titleStyle, _ := f.NewStyle(&excelize.Style{
+		Font:      &excelize.Font{Bold: true, Size: 18},
+		Alignment: &allCenterAligment,
+		Border:    borders,
+	})
+	fieldStyle, _ := f.NewStyle(&excelize.Style{
+		Font:      &boldText,
+		Alignment: &verticalCenterAligment,
+		Border:    borders,
+	})
+	columnTitleStyle, _ := f.NewStyle(&excelize.Style{
+		Font:      &boldText,
+		Alignment: &allCenterAligment,
+		Fill:      excelize.Fill{Type: "pattern", Pattern: 1, Color: []string{"#DDEBF7"}},
+		Border:    borders,
+	})
+	markStyle, _ := f.NewStyle(&excelize.Style{
+		Font:      &boldText,
+		Alignment: &allCenterAligment,
+		Border:    borders,
+	})
+	verticalCenterStyle, _ := f.NewStyle(&excelize.Style{
+		Alignment: &verticalCenterAligment,
+		Border:    borders,
+	})
+	borderStyle, _ := f.NewStyle(&excelize.Style{
+		Border: borders,
 	})
 
-	textWrapStyle, _ := f.NewStyle(&excelize.Style{
-		Alignment: &excelize.Alignment{
-			Vertical: "center",
-			WrapText: true,
-		},
-	})
+	f.SetCellStyle("Sheet1", "A2", "C2", titleStyle)
 
-	f.SetCellStyle("Sheet1", "A2", "A2", allCenterStyle)
-	f.SetCellStyle("Sheet1", "B14", "B14", textWrapStyle)
-	f.SetCellStyle("Sheet1", "A18", "C29", textWrapStyle)
-	f.SetCellStyle("Sheet1", "B13", "B29", allCenterStyle)
-	f.SetCellStyle("Sheet1", "A17", "C17", allCenterStyle)
+	f.SetCellStyle("Sheet1", "A5", "C10", borderStyle)
+	f.SetCellStyle("Sheet1", "A5", "A10", fieldStyle)
+
+	f.SetCellStyle("Sheet1", "A13", "C14", fieldStyle)
+	f.SetCellStyle("Sheet1", "B13", "B14", markStyle)
+
+	f.SetCellStyle("Sheet1", "A17", "C17", columnTitleStyle)
+	f.SetCellStyle("Sheet1", "A18", "C29", verticalCenterStyle)
+	f.SetCellStyle("Sheet1", "B18", "B29", markStyle)
+
+	f.SetRowHeight("Sheet1", 2, 24)
 
 	f.SetColWidth("Sheet1", "A", "A", 54)
 	f.SetColWidth("Sheet1", "B", "B", 20)
