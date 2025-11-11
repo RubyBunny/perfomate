@@ -3,6 +3,7 @@ package convertors
 import (
 	"perfomate/src/qapair"
 	"perfomate/src/reviews"
+	"strings"
 
 	"github.com/xuri/excelize/v2"
 )
@@ -33,8 +34,8 @@ func row2review(questionRow, answerRow []string) reviews.Review {
 	unmarkedQuestions := row2unmarkedQuestions(questionRow[20:], answerRow[20:])
 
 	return reviews.Review{
-		WhoWrited:  answerRow[0],
-		WrittenFor: answerRow[1],
+		WhoWrited:  strings.TrimSpace(answerRow[0]),
+		WrittenFor: strings.TrimSpace(answerRow[1]),
 		Questions: qapair.QAPairRepository{
 			MarkedQuestions:   markedQuestions,
 			UnmarkedQuestions: unmarkedQuestions,
@@ -47,7 +48,7 @@ func row2markedQuestions(questionRow, answerRow []string) []qapair.MarkedQAPair 
 
 	for i := 0; i < len(questionRow); i += 2 {
 		markedQuestions = append(markedQuestions, qapair.NewMarkedQAPair(
-			questionRow[i], answerRow[i+1], answerRow[i],
+			questionRow[i], strings.TrimSpace(answerRow[i+1]), answerRow[i],
 		))
 	}
 
@@ -62,7 +63,7 @@ func row2unmarkedQuestions(questionRow, answerRow []string) []qapair.QAPair {
 	}
 
 	for i, answer := range answerRow {
-		unmarkedQuestions[i].Answer = answer
+		unmarkedQuestions[i].Answer = strings.TrimSpace(answer)
 	}
 
 	return unmarkedQuestions
