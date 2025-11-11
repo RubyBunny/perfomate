@@ -10,6 +10,9 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
+var printType int = 9
+var printScale uint = 54
+
 type ExelGenerator struct {
 	filePath string
 }
@@ -66,6 +69,11 @@ func (e ExelGenerator) Generate(finalReview reviews.FinalReview) {
 	})
 	borderStyle, _ := f.NewStyle(&excelize.Style{
 		Border: borders,
+	})
+
+	f.SetPageLayout("Sheet1", &excelize.PageLayoutOptions{
+		Size:     &printType,
+		AdjustTo: &printScale,
 	})
 
 	f.SetCellStyle("Sheet1", "A2", "C2", titleStyle)
