@@ -49,7 +49,9 @@ func joinQuestions(reviews []Review) qapair.QAPairRepository {
 
 	for qi := range reviews[0].Questions.MarkedQuestions {
 		var answers []string
+		var marksSum float64
 		var avgMark float64
+		var zerosCount int
 
 		for ri := range reviews {
 			if reviews[ri].Questions.MarkedQuestions[qi].Answer != "" {
@@ -58,7 +60,18 @@ func joinQuestions(reviews []Review) qapair.QAPairRepository {
 					fmt.Sprintf(AnswerFormat, reviews[ri].Questions.MarkedQuestions[qi].Answer),
 				)
 			}
-			avgMark += reviews[ri].Questions.MarkedQuestions[qi].Mark
+
+			if reviews[ri].Questions.MarkedQuestions[qi].Mark == 0 {
+				zerosCount++
+			}
+
+			marksSum += reviews[ri].Questions.MarkedQuestions[qi].Mark
+		}
+
+		if len(reviews) == zerosCount {
+			avgMark = 0
+		} else {
+			avgMark = marksSum / float64(len(reviews)-zerosCount)
 		}
 
 		markedQuestions = append(markedQuestions, qapair.MarkedQAPair{
@@ -66,7 +79,7 @@ func joinQuestions(reviews []Review) qapair.QAPairRepository {
 				Question: reviews[0].Questions.MarkedQuestions[qi].Question,
 				Answer:   strings.Join(answers, "\n"),
 			},
-			Mark: avgMark / float64(len(reviews)),
+			Mark: avgMark,
 		})
 	}
 
@@ -96,12 +109,24 @@ func joinQuestions(reviews []Review) qapair.QAPairRepository {
 
 func calcAverageMark(questions qapair.QAPairRepository) float64 {
 	var avgMark float64
+	var marksSum float64
+	var zerosCount int
 
 	for _, q := range questions.MarkedQuestions {
-		avgMark += q.Mark
+		if q.Mark == 0 {
+			zerosCount++
+		}
+
+		marksSum += q.Mark
 	}
 
-	return avgMark / float64(len(questions.MarkedQuestions))
+	if len(questions.MarkedQuestions) == zerosCount {
+		avgMark = 0
+	} else {
+		avgMark = marksSum / float64(len(questions.MarkedQuestions)-zerosCount)
+	}
+
+	return avgMark
 }
 
 func avgMark2Result(avg float64) string {
@@ -113,8 +138,8 @@ func avgMark2Result(avg float64) string {
 	case 3:
 		return "Пройден с замечаниями"
 	case 2:
-		fallthrough
-	default:
 		return "Не пройден"
+	default:
+		return "N/A"
 	}
 }
