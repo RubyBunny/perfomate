@@ -5,7 +5,7 @@ import (
 )
 
 type ConvertorCore interface {
-	Convert() []reviews.Review
+	Convert2PerfomanceReview() []reviews.PerfomanceReview
 }
 
 type Convertor struct {
@@ -18,6 +18,6 @@ func NewConvertor(absolutePath string) Convertor {
 	return Convertor{convertorEngine}
 }
 
-func (c Convertor) Convert() []reviews.Review {
-	return c.core.Convert()
+func (c Convertor) Convert2PerfomanceReview() []reviews.PerfomanceReview {
+	return c.core.Convert2PerfomanceReview()
 }

@@ -22,20 +22,20 @@ func main() {
 	generator := generators.NewGenerator(*ouputPath, "xlsx")
 	searcher := searchers.NewFullnameSearcher(strings.Split(string(fullnames), "\r\n"))
 
-	reviewsSlice := convertor.Convert()
-	reviewsMap := map[string][]reviews.Review{}
+	perfomanceReviewsSlice := convertor.Convert2PerfomanceReview()
+	perfomanceReviewsMap := map[string][]reviews.PerfomanceReview{}
 
-	for _, review := range reviewsSlice {
+	for _, review := range perfomanceReviewsSlice {
 		fullname, err := searcher.Search(review.WrittenFor)
 		if err != nil {
 			fmt.Printf("Для \"%v\" %v. Review от %v пропущено!\n", fullname, err, review.WhoWrited)
 			continue
 		}
 
-		reviewsMap[fullname] = append(reviewsMap[fullname], review)
+		perfomanceReviewsMap[fullname] = append(perfomanceReviewsMap[fullname], review)
 	}
 
-	for fullname, reviewArr := range reviewsMap {
-		generator.Generate(reviews.NewFinalReview(fullname, reviewArr))
+	for fullname, perfomanceReviews := range perfomanceReviewsMap {
+		generator.Generate(reviews.NewFinalPerfomanceReview(fullname, perfomanceReviews))
 	}
 }

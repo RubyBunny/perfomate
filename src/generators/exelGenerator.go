@@ -21,7 +21,7 @@ func NewExelGenerator(filePath string) ExelGenerator {
 	return ExelGenerator{filePath}
 }
 
-func (e ExelGenerator) Generate(finalReview reviews.FinalReview) {
+func (e ExelGenerator) GeneratePerfomanceReview(finalReview reviews.FinalPerfomanceReview) {
 	f := excelize.NewFile()
 	defer f.Close()
 

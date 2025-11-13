@@ -3,7 +3,7 @@ package generators
 import "perfomate/src/reviews"
 
 type GeneratorCore interface {
-	Generate(finalReview reviews.FinalReview)
+	GeneratePerfomanceReview(finalReview reviews.FinalPerfomanceReview)
 }
 
 type Generator struct {
@@ -15,6 +15,6 @@ func NewGenerator(filePath, fileType string) Generator {
 	return Generator{core}
 }
 
-func (g Generator) Generate(finalReview reviews.FinalReview) {
-	g.core.Generate(finalReview)
+func (g Generator) Generate(finalReview reviews.FinalPerfomanceReview) {
+	g.core.GeneratePerfomanceReview(finalReview)
 }

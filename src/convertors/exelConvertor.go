@@ -16,12 +16,12 @@ func NewExelConvertor(absolutePath string) ExelConvertor {
 	return ExelConvertor{absolutePath}
 }
 
-func (e ExelConvertor) Convert() []reviews.Review {
+func (e ExelConvertor) Convert2PerfomanceReview() []reviews.PerfomanceReview {
 	f, _ := excelize.OpenFile(e.absolutePath)
 	rows, _ := f.GetRows(f.GetSheetName(0))
 	defer f.Close()
 
-	var reviews []reviews.Review
+	var reviews []reviews.PerfomanceReview
 	for _, answerRow := range rows[1:] {
 		reviews = append(reviews, row2review(rows[0], answerRow))
 	}
@@ -29,18 +29,18 @@ func (e ExelConvertor) Convert() []reviews.Review {
 	return reviews
 }
 
-func row2review(questionRow, answerRow []string) reviews.Review {
+func row2review(questionRow, answerRow []string) reviews.PerfomanceReview {
 	markedQuestions := row2markedQuestions(questionRow[2:20], answerRow[2:20])
 	unmarkedQuestions := row2unmarkedQuestions(questionRow[20:], answerRow[20:])
 
-	return reviews.Review{
-		WhoWrited:  strings.TrimSpace(answerRow[0]),
-		WrittenFor: strings.TrimSpace(answerRow[1]),
-		Questions: qapair.QAPairRepository{
-			MarkedQuestions:   markedQuestions,
+	return reviews.NewPerfomanceReview(
+		strings.TrimSpace(answerRow[0]),
+		strings.TrimSpace(answerRow[1]),
+		qapair.QAPairRepository{
 			UnmarkedQuestions: unmarkedQuestions,
+			MarkedQuestions:   markedQuestions,
 		},
-	}
+	)
 }
 
 func row2markedQuestions(questionRow, answerRow []string) []qapair.MarkedQAPair {

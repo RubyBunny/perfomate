@@ -11,7 +11,7 @@ const (
 	AnswerFormat = "— %v"
 )
 
-type FinalReview struct {
+type FinalPerfomanceReview struct {
 	Fullname    string
 	Respondents string
 	Questions   qapair.QAPairRepository
@@ -19,7 +19,7 @@ type FinalReview struct {
 	Status      string
 }
 
-func NewFinalReview(fullname string, reviews []Review) FinalReview {
+func NewFinalPerfomanceReview(fullname string, reviews []PerfomanceReview) FinalPerfomanceReview {
 	respondents := concatRespondents(reviews)
 	questions := joinQuestions(reviews)
 
@@ -31,7 +31,7 @@ func NewFinalReview(fullname string, reviews []Review) FinalReview {
 	avg := calcAverageMark(marks)
 	status := avgMark2Result(avg)
 
-	return FinalReview{
+	return FinalPerfomanceReview{
 		Fullname:    fullname,
 		Respondents: respondents,
 		Questions:   questions,
@@ -40,7 +40,7 @@ func NewFinalReview(fullname string, reviews []Review) FinalReview {
 	}
 }
 
-func concatRespondents(reviews []Review) string {
+func concatRespondents(reviews []PerfomanceReview) string {
 	var respondents []string
 	for _, review := range reviews {
 		respondents = append(respondents, review.WhoWrited)
@@ -49,7 +49,7 @@ func concatRespondents(reviews []Review) string {
 	return strings.Join(respondents, ", ")
 }
 
-func joinQuestions(reviews []Review) qapair.QAPairRepository {
+func joinQuestions(reviews []PerfomanceReview) qapair.QAPairRepository {
 	var markedQuestions []qapair.MarkedQAPair
 	var unmarkedQuestions []qapair.QAPair
 
