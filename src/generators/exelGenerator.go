@@ -144,6 +144,75 @@ func (e ExelGenerator) GeneratePerfomanceReview(finalReview reviews.FinalPerfoma
 	}
 }
 
+func (e ExelGenerator) GenerateSelfReview(selfReview reviews.SelfReview) {
+	f := excelize.NewFile()
+	defer f.Close()
+
+	orientation := "landscape"
+
+	boldText := excelize.Font{Bold: true}
+	horizontalCenterAligment := excelize.Alignment{
+		Vertical:   "top",
+		Horizontal: "center",
+		WrapText:   true,
+	}
+	borders := []excelize.Border{
+		{Type: "top", Color: "#000000", Style: 1},
+		{Type: "left", Color: "#000000", Style: 1},
+		{Type: "right", Color: "#000000", Style: 1},
+		{Type: "bottom", Color: "#000000", Style: 1},
+	}
+
+	fieldStyle, _ := f.NewStyle(&excelize.Style{
+		Font:      &boldText,
+		Alignment: &horizontalCenterAligment,
+		Border:    borders,
+	})
+	answerStyle, _ := f.NewStyle(&excelize.Style{
+		Alignment: &excelize.Alignment{
+			Vertical: "top",
+			WrapText: true,
+		},
+		Border: borders,
+	})
+
+	var printScale uint = 95
+	f.SetPageLayout("Sheet1", &excelize.PageLayoutOptions{
+		Size:        &printType,
+		Orientation: &orientation,
+		AdjustTo:    &printScale,
+	})
+
+	f.SetColWidth("Sheet1", "A", "A", 29)
+	f.SetColWidth("Sheet1", "B", "B", 108)
+
+	lastRowNumber := len(selfReview.Questions.UnmarkedQuestions) + 1
+
+	f.SetCellStyle("Sheet1", "A1", fmt.Sprintf("A%v", lastRowNumber), fieldStyle)
+	f.SetCellStyle("Sheet1", "B1", "B1", fieldStyle)
+	f.SetCellStyle("Sheet1", "B2", fmt.Sprintf("B%v", lastRowNumber), answerStyle)
+
+	f.SetHeaderFooter("Sheet1", &excelize.HeaderFooterOptions{
+		DifferentFirst:   false,
+		DifferentOddEven: false,
+		OddHeader:        "&C&B&20Результаты Self-Review",
+	})
+
+	writeRow(f, "A1", []any{"Твои имя и фамилия", selfReview.WhoWrited})
+	for i, qa := range selfReview.Questions.UnmarkedQuestions {
+		writeRow(f, fmt.Sprintf("A%v", i+2), []any{qa.Question, qa.Answer})
+	}
+
+	err := f.SaveAs(
+		filepath.Join(
+			e.filePath,
+			fmt.Sprintf("Self-Review %v.xlsx", getFileName(selfReview.WhoWrited)),
+		))
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
 func writeRow(file *excelize.File, cell string, slice []any) {
 	file.SetSheetRow("Sheet1", cell, &slice)
 }
