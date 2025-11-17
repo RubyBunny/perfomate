@@ -4,7 +4,7 @@ import "perfomate/src/reviews"
 
 type GeneratorCore interface {
 	GeneratePerfomanceReview(finalReview reviews.FinalPerfomanceReview)
-	GenerateSelfReview(selfReview reviews.SelfReview)
+	GenerateSelfReview(selfReview *reviews.SelfReview)
 }
 
 type Generator struct {
@@ -20,6 +20,6 @@ func (g Generator) GeneratePerfomanceReview(finalReview reviews.FinalPerfomanceR
 	g.core.GeneratePerfomanceReview(finalReview)
 }
 
-func (g Generator) GenerateSelfReview(selfReview reviews.SelfReview) {
+func (g Generator) GenerateSelfReview(selfReview *reviews.SelfReview) {
 	g.core.GenerateSelfReview(selfReview)
 }

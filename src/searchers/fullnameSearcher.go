@@ -23,7 +23,7 @@ func (s FullnameSearcher) Search(fullname string) (string, error) {
 	)
 
 	if len(suitableFullnames) > 1 {
-		fmt.Printf("Обнаружена коллизия имен! Искомая строка \"%v\" соответствует нескольким значениям!\n", fullname)
+		fmt.Printf("Обнаружена коллизия! Искомая строка \"%v\" соответствует нескольким значениям!\n", fullname)
 		fmt.Println("Выберете нужный вариант: ")
 		for i, fullname := range suitableFullnames {
 			fmt.Printf("[%v] %v\n", i, fullname)

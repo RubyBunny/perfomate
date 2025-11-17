@@ -19,7 +19,7 @@ type FinalPerfomanceReview struct {
 	Status      string
 }
 
-func NewFinalPerfomanceReview(fullname string, reviews []PerfomanceReview) FinalPerfomanceReview {
+func NewFinalPerfomanceReview(fullname string, reviews []*PerfomanceReview) FinalPerfomanceReview {
 	respondents := concatRespondents(reviews)
 	questions := joinQuestions(reviews)
 
@@ -40,7 +40,7 @@ func NewFinalPerfomanceReview(fullname string, reviews []PerfomanceReview) Final
 	}
 }
 
-func concatRespondents(reviews []PerfomanceReview) string {
+func concatRespondents(reviews []*PerfomanceReview) string {
 	var respondents []string
 	for _, review := range reviews {
 		respondents = append(respondents, review.WhoWrited)
@@ -49,7 +49,7 @@ func concatRespondents(reviews []PerfomanceReview) string {
 	return strings.Join(respondents, ", ")
 }
 
-func joinQuestions(reviews []PerfomanceReview) qapair.QAPairRepository {
+func joinQuestions(reviews []*PerfomanceReview) qapair.QAPairRepository {
 	var markedQuestions []qapair.MarkedQAPair
 	var unmarkedQuestions []qapair.QAPair
 

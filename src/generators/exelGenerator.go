@@ -144,7 +144,7 @@ func (e ExelGenerator) GeneratePerfomanceReview(finalReview reviews.FinalPerfoma
 	}
 }
 
-func (e ExelGenerator) GenerateSelfReview(selfReview reviews.SelfReview) {
+func (e ExelGenerator) GenerateSelfReview(selfReview *reviews.SelfReview) {
 	f := excelize.NewFile()
 	defer f.Close()
 
@@ -206,7 +206,7 @@ func (e ExelGenerator) GenerateSelfReview(selfReview reviews.SelfReview) {
 	err := f.SaveAs(
 		filepath.Join(
 			e.filePath,
-			fmt.Sprintf("Self-Review %v.xlsx", getFileName(selfReview.WhoWrited)),
+			fmt.Sprintf("Self-Review %v.xlsx", selfReview.WhoWrited),
 		))
 	if err != nil {
 		fmt.Println(err)

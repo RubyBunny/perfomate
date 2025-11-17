@@ -12,14 +12,14 @@ type PerfomanceReview struct {
 	WrittenFor string
 }
 
-func NewPerfomanceReview(whoWrited, writtenFor string, questions qapair.QAPairRepository) PerfomanceReview {
-	return PerfomanceReview{Review{WhoWrited: whoWrited, Questions: questions}, writtenFor}
+func NewPerfomanceReview(whoWrited, writtenFor string, questions qapair.QAPairRepository) *PerfomanceReview {
+	return &PerfomanceReview{Review{WhoWrited: whoWrited, Questions: questions}, writtenFor}
 }
 
 type SelfReview struct {
 	Review
 }
 
-func NewSelfReview(whoWrited string, questions qapair.QAPairRepository) SelfReview {
-	return SelfReview{Review{WhoWrited: whoWrited, Questions: questions}}
+func NewSelfReview(whoWrited string, questions qapair.QAPairRepository) *SelfReview {
+	return &SelfReview{Review{WhoWrited: whoWrited, Questions: questions}}
 }

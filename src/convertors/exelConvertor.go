@@ -16,12 +16,12 @@ func NewExelConvertor(absolutePath string) ExelConvertor {
 	return ExelConvertor{absolutePath}
 }
 
-func (e ExelConvertor) Convert2PerfomanceReview() []reviews.PerfomanceReview {
+func (e ExelConvertor) Convert2PerfomanceReview() []*reviews.PerfomanceReview {
 	f, _ := excelize.OpenFile(e.absolutePath)
 	rows, _ := f.GetRows(f.GetSheetName(0))
 	defer f.Close()
 
-	var reviews []reviews.PerfomanceReview
+	var reviews []*reviews.PerfomanceReview
 	for _, answerRow := range rows[1:] {
 		reviews = append(reviews, row2perfomanceReview(rows[0], answerRow))
 	}
@@ -29,7 +29,7 @@ func (e ExelConvertor) Convert2PerfomanceReview() []reviews.PerfomanceReview {
 	return reviews
 }
 
-func row2perfomanceReview(questionRow, answerRow []string) reviews.PerfomanceReview {
+func row2perfomanceReview(questionRow, answerRow []string) *reviews.PerfomanceReview {
 	markedQuestions := row2markedQuestions(questionRow[2:20], answerRow[2:20])
 	unmarkedQuestions := row2unmarkedQuestions(questionRow[20:], answerRow[20:])
 
@@ -43,12 +43,12 @@ func row2perfomanceReview(questionRow, answerRow []string) reviews.PerfomanceRev
 	)
 }
 
-func (e ExelConvertor) Convert2SelfReview() []reviews.SelfReview {
+func (e ExelConvertor) Convert2SelfReview() []*reviews.SelfReview {
 	f, _ := excelize.OpenFile(e.absolutePath)
 	rows, _ := f.GetRows(f.GetSheetName(0))
 	defer f.Close()
 
-	var reviews []reviews.SelfReview
+	var reviews []*reviews.SelfReview
 	for _, answerRow := range rows[1:] {
 		reviews = append(reviews, row2selfReview(rows[0], answerRow))
 	}
@@ -56,7 +56,7 @@ func (e ExelConvertor) Convert2SelfReview() []reviews.SelfReview {
 	return reviews
 }
 
-func row2selfReview(questionRow, answerRow []string) reviews.SelfReview {
+func row2selfReview(questionRow, answerRow []string) *reviews.SelfReview {
 	unmarkedQuestions := row2unmarkedQuestions(questionRow[1:], answerRow[1:])
 
 	return reviews.NewSelfReview(
