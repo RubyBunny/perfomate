@@ -23,7 +23,7 @@ var perfomanceCmd = &cobra.Command{
 		searcher := searchers.NewFullnameSearcher(strings.Split(string(fullnames), "\r\n"))
 
 		perfomanceReviewsSlice := convertor.Convert2PerfomanceReview()
-		perfomanceReviewsMap := map[string][]reviews.PerfomanceReview{}
+		perfomanceReviewsMap := map[string][]*reviews.PerfomanceReview{}
 
 		for _, review := range perfomanceReviewsSlice {
 			fullname, err := searcher.Search(review.WrittenFor)
