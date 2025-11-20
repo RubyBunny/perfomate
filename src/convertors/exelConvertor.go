@@ -23,15 +23,15 @@ func (e ExelConvertor) Convert2PerfomanceReview() []*reviews.PerfomanceReview {
 
 	var reviews []*reviews.PerfomanceReview
 	for _, answerRow := range rows[1:] {
-		reviews = append(reviews, row2perfomanceReview(rows[0], answerRow))
+		reviews = append(reviews, e.row2perfomanceReview(rows[0], answerRow))
 	}
 
 	return reviews
 }
 
-func row2perfomanceReview(questionRow, answerRow []string) *reviews.PerfomanceReview {
-	markedQuestions := row2markedQuestions(questionRow[2:20], answerRow[2:20])
-	unmarkedQuestions := row2unmarkedQuestions(questionRow[20:], answerRow[20:])
+func (e ExelConvertor) row2perfomanceReview(questionRow, answerRow []string) *reviews.PerfomanceReview {
+	markedQuestions := e.row2markedQuestions(questionRow[2:20], answerRow[2:20])
+	unmarkedQuestions := e.row2unmarkedQuestions(questionRow[20:], answerRow[20:])
 
 	return reviews.NewPerfomanceReview(
 		strings.TrimSpace(answerRow[0]),
@@ -50,14 +50,14 @@ func (e ExelConvertor) Convert2SelfReview() []*reviews.SelfReview {
 
 	var reviews []*reviews.SelfReview
 	for _, answerRow := range rows[1:] {
-		reviews = append(reviews, row2selfReview(rows[0], answerRow))
+		reviews = append(reviews, e.row2selfReview(rows[0], answerRow))
 	}
 
 	return reviews
 }
 
-func row2selfReview(questionRow, answerRow []string) *reviews.SelfReview {
-	unmarkedQuestions := row2unmarkedQuestions(questionRow[1:], answerRow[1:])
+func (e ExelConvertor) row2selfReview(questionRow, answerRow []string) *reviews.SelfReview {
+	unmarkedQuestions := e.row2unmarkedQuestions(questionRow[1:], answerRow[1:])
 
 	return reviews.NewSelfReview(
 		strings.TrimSpace(answerRow[0]),
@@ -67,7 +67,7 @@ func row2selfReview(questionRow, answerRow []string) *reviews.SelfReview {
 	)
 }
 
-func row2markedQuestions(questionRow, answerRow []string) []qapair.MarkedQAPair {
+func (e ExelConvertor) row2markedQuestions(questionRow, answerRow []string) []qapair.MarkedQAPair {
 	var markedQuestions []qapair.MarkedQAPair
 
 	for i := 0; i < len(questionRow); i += 2 {
@@ -79,7 +79,7 @@ func row2markedQuestions(questionRow, answerRow []string) []qapair.MarkedQAPair 
 	return markedQuestions
 }
 
-func row2unmarkedQuestions(questionRow, answerRow []string) []qapair.QAPair {
+func (e ExelConvertor) row2unmarkedQuestions(questionRow, answerRow []string) []qapair.QAPair {
 	unmarkedQuestions := make([]qapair.QAPair, len(questionRow))
 
 	for i, question := range questionRow {

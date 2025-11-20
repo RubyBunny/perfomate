@@ -13,10 +13,8 @@ type Convertor struct {
 	core ConvertorCore
 }
 
-func NewConvertor(absolutePath string) Convertor {
-	var convertorEngine ConvertorCore = NewExelConvertor(absolutePath)
-
-	return Convertor{convertorEngine}
+func NewConvertor(core ConvertorCore) Convertor {
+	return Convertor{core}
 }
 
 func (c Convertor) Convert2PerfomanceReview() []*reviews.PerfomanceReview {
