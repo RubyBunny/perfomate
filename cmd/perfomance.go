@@ -16,7 +16,15 @@ var perfomanceCmd = &cobra.Command{
 	Use:   "perfomance",
 	Short: "Generate perfomance review",
 	Run: func(cmd *cobra.Command, args []string) {
-		convertor := convertors.NewConvertor(InputPath)
+		var convertorCore convertors.ConvertorCore
+
+		if IsJSON {
+			convertorCore = convertors.NewJSONConvertor(InputPath)
+		} else {
+			convertorCore = convertors.NewExelConvertor(InputPath)
+		}
+
+		convertor := convertors.NewConvertor(convertorCore)
 		generator := generators.NewGenerator(OutputPath, "xlsx")
 
 		fullnames, _ := os.ReadFile("./users.txt")

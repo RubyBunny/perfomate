@@ -10,6 +10,7 @@ var rootCmd = &cobra.Command{Use: "perfomate"}
 
 var InputPath string
 var OutputPath string
+var IsJSON bool
 
 func init() {
 	rootCmd.AddCommand(perfomanceCmd)
@@ -17,6 +18,8 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&InputPath, "input-path", "i", "", "input raw file path")
 	rootCmd.PersistentFlags().StringVarP(&OutputPath, "output-path", "o", "./", "output path (application doesn't create folders)")
+
+	rootCmd.PersistentFlags().BoolVar(&IsJSON, "json", false, "use JSON convertor")
 
 	rootCmd.MarkPersistentFlagRequired("input-path")
 }
